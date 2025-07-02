@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.entity.effect.StatusEffects;
-import java.util.concurrent.TimeUnit;
+import net.minecraft.text.Text;
 
 public class AutoTotemClient implements ClientModInitializer {
 	private boolean totemRecentlyPopped = false;
@@ -38,6 +38,7 @@ public class AutoTotemClient implements ClientModInitializer {
 		}
 
 		if(totemRecentlyPopped && cooldownTicks <= 0){
+			totemRecentlyPopped = false;
 			var inventory =  MinecraftClient.getInstance().player.getInventory();
 			int shieldSlot = -1;
 			for(int i = 0; i < inventory.size();i++){
@@ -51,8 +52,17 @@ public class AutoTotemClient implements ClientModInitializer {
 					break;
 				}
 			}
-			if(!equippedTotem && shieldSlot != -1 && ModConfig.switchToShield){
-				equipOffhand(client, shieldSlot);
+			if(!equippedTotem){
+				sendChatMessage(client, "No Totem was found!");
+				if(ModConfig.switchToShield){
+					if(shieldSlot != -1 ){
+						equipOffhand(client, shieldSlot);
+					}
+					else{
+						sendChatMessage(client, "No Shield was found!");
+					}
+				}
+
 			}
 		}
 
@@ -72,7 +82,11 @@ public class AutoTotemClient implements ClientModInitializer {
 				SlotActionType.SWAP,
 				client.player
 		);
-		totemRecentlyPopped = false;
+		String itemName = client.player.getOffHandStack().getItemName().getString();
+		sendChatMessage(
+				client,
+				itemName+" was automatically equipped after "+ModConfig.equipCooldown+" seconds."
+		);
 	}
 
 	private boolean didTotemPop(MinecraftClient client) {
@@ -86,6 +100,12 @@ public class AutoTotemClient implements ClientModInitializer {
 		return regen != null && regen.getAmplifier() == 1 && regen.getDuration() >= 800; //&&
 				//absorb != null && absorb.getAmplifier() == 0 && absorb.getDuration() <= 100 &&
 				//fireRes != null && fireRes.getAmplifier() == 0 && fireRes.getDuration() >= 800;
+	}
+
+	private void sendChatMessage(MinecraftClient client,String message){
+		if(ModConfig.sendAlerts){
+			client.inGameHud.getChatHud().addMessage(Text.literal(message));
+		}
 	}
 
 }

@@ -1,4 +1,7 @@
 {
+  "auto-totem.midnightconfig.category.Main": "Main",
+  "auto-totem.midnightconfig.category.Debug": "Debug",
+
   "auto-totem.midnightconfig.title": "Auto Totem",
   "auto-totem.midnightconfig.modEnabled": "Enable Auto-Totem",
 
@@ -6,5 +9,8 @@
   "auto-totem.midnightconfig.switchToShield.label.tooltip":"If a totem is popped and it was the last one, equip a shield",
 
   "auto-totem.midnightconfig.equipCooldown": "Equip Cooldown (Seconds)",
-  "auto-totem.midnightconfig.equipCooldown.label.tooltip": "Amount of seconds for Totem/Shield to be equipped after it pops"
+  "auto-totem.midnightconfig.equipCooldown.label.tooltip": "Amount of seconds for Totem/Shield to be equipped after it pops",
+
+  "auto-totem.midnightconfig.sendAlerts": "Send Alerts In Chat",
+  "auto-totem.midnightconfig.sendAlerts.label.tooltip": "Sends an alert in chat of these events:\nTotem Equips\nShield Equips\nIf no Totems found\nIf no shields found"
 }
