@@ -2,7 +2,7 @@ package github.sillygoober2;
 
 import eu.midnightdust.lib.config.MidnightConfig;
 
-public class ModConfig extends MidnightConfig {
+public class AutoTotemConfig extends MidnightConfig {
     public static final String MAIN = "Main";
     public static final String DEBUG = "Debug";
 

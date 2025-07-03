@@ -17,12 +17,12 @@ public class AutoTotemClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		MidnightConfig.init("auto-totem", ModConfig.class);
+		MidnightConfig.init("auto-totem", AutoTotemConfig.class);
 		ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
 	}
 
 	private void onClientTick(MinecraftClient client){
-		if (client.player == null || !ModConfig.modEnabled) return;
+		if (client.player == null || !AutoTotemConfig.modEnabled) return;
 
 		if (cooldownTicks > 0) {
 			cooldownTicks--;
@@ -34,7 +34,7 @@ public class AutoTotemClient implements ClientModInitializer {
 
 		if(!previousOffhand.isEmpty() && current.isEmpty() && didTotemPop(client) && !totemRecentlyPopped){
 			totemRecentlyPopped = true;
-			cooldownTicks = ModConfig.equipCooldown * 20;
+			cooldownTicks = AutoTotemConfig.equipCooldown * 20;
 			return;
 		}
 
@@ -55,7 +55,7 @@ public class AutoTotemClient implements ClientModInitializer {
 			}
 			if(!equippedTotem){
 				sendChatMessage(client, "No Totem was found!");
-				if(ModConfig.switchToShield){
+				if(AutoTotemConfig.switchToShield){
 					if(shieldSlot != -1 ){
 						equipOffhand(client, shieldSlot);
 					}
@@ -86,7 +86,7 @@ public class AutoTotemClient implements ClientModInitializer {
 		String itemName = client.player.getOffHandStack().getItemName().getString();
 		sendChatMessage(
 				client,
-				itemName+" was automatically equipped after "+ModConfig.equipCooldown+" seconds."
+				itemName+" was automatically equipped after "+ AutoTotemConfig.equipCooldown+" seconds."
 		);
 	}
 
@@ -104,7 +104,7 @@ public class AutoTotemClient implements ClientModInitializer {
 	}
 
 	private void sendChatMessage(MinecraftClient client,String message){
-		if(ModConfig.sendAlerts){
+		if(AutoTotemConfig.sendAlerts){
 			client.inGameHud.getChatHud().addMessage(Text.literal(message));
 		}
 	}
