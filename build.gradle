@@ -1,20 +1,23 @@
 plugins {
-	id 'fabric-loom' version "${loom_version}"
+	id 'fabric-loom' version "1.10-SNAPSHOT"
 	id 'maven-publish'
 }
 
-version = project.mod_version
+def mcVersion = project.hasProperty("target_mc") ? project.property("target_mc") : "1.21.5"
+def versionProps = new Properties()
+file("versions/${mcVersion}.properties").withInputStream {
+	versionProps.load(it)
+}
 group = project.maven_group
 
 base {
-	archivesName = "${archives_base_name}-${minecraft_version}"
+	archivesName = "${project.archives_base_name}-${versionProps.minecraft_version}-${project.mod_version}"
 }
 
 repositories {
 	maven {
 		url = "https://api.modrinth.com/maven"
 	}
-	gradlePluginPortal()
 }
 
 loom {
@@ -30,15 +33,13 @@ loom {
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	minecraft "com.mojang:minecraft:${versionProps.minecraft_version}"
+	mappings "net.fabricmc:yarn:${versionProps.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${versionProps.loader_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${versionProps.fabric_version}"
 
-	modImplementation include ("maven.modrinth:midnightlib:${project.midnightlib_version}")
+	modImplementation include ("maven.modrinth:midnightlib:${versionProps.midnightlib_version}")
 }
 
 processResources {
@@ -54,9 +55,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
 	sourceCompatibility = JavaVersion.VERSION_21
@@ -71,7 +69,6 @@ jar {
 	}
 }
 
-// configure the maven publication
 publishing {
 	publications {
 		create("mavenJava", MavenPublication) {
@@ -80,11 +77,31 @@ publishing {
 		}
 	}
 
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
 	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
+	}
+}
+
+task buildAll {
+	group = "build"
+	description = "Build the mod for all available versions in the 'versions/' folder."
+
+	doLast {
+		file("versions").listFiles(new FilenameFilter() {
+			boolean accept(File dir, String name) {
+				return name.endsWith(".properties")
+			}
+		}).each { file ->
+			def versionName = file.name.replace(".properties", "")
+			println "Building for Minecraft version: ${versionName}"
+
+			exec {
+				workingDir projectDir
+				commandLine "./gradlew", "build", "-Ptarget_mc=${versionName}"
+				// On Windows, use gradlew.bat and quotes
+				if (System.properties['os.name'].toLowerCase().contains("windows")) {
+					commandLine "cmd", "/c", "gradlew.bat", "build", "-Ptarget_mc=\"${versionName}\""
+				}
+			}
+		}
 	}
 }
