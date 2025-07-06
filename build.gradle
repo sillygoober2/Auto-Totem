@@ -8,10 +8,11 @@ def versionProps = new Properties()
 file("versions/${mcVersion}.properties").withInputStream {
 	versionProps.load(it)
 }
+version = project.mod_version
 group = project.maven_group
 
 base {
-	archivesName = "${project.archives_base_name}-${versionProps.minecraft_version}-${project.mod_version}"
+	archivesName = "${project.archives_base_name}-${versionProps.minecraft_version}"
 }
 
 repositories {
