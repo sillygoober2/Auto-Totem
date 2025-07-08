@@ -1,6 +1,5 @@
 {
   "auto-totem.midnightconfig.category.Main": "Main",
-  "auto-totem.midnightconfig.category.Debug": "Debug",
 
   "auto-totem.midnightconfig.title": "Auto Totem",
   "auto-totem.midnightconfig.modEnabled": "Enable Auto-Totem",
@@ -11,6 +10,12 @@
   "auto-totem.midnightconfig.equipCooldown": "Equip Cooldown (Seconds)",
   "auto-totem.midnightconfig.equipCooldown.label.tooltip": "Amount of seconds for Totem/Shield to be equipped after it pops",
 
-  "auto-totem.midnightconfig.sendAlerts": "Send Alerts In Chat",
-  "auto-totem.midnightconfig.sendAlerts.label.tooltip": "Sends an alert in chat of these events:\nTotem Equips\nShield Equips\nIf no Totems found\nIf no shields found"
+  "auto-totem.midnightconfig.sendNoTotemAlerts": "Send Alerts On No Totems In Chat",
+  "auto-totem.midnightconfig.sendNoShieldAlerts": "Send Alerts On No Shields In Chat",
+
+  "auto-totem.midnightconfig.alertsChatColor": "Alerts colour in Chat (HEX code)",
+  "auto-totem.midnightconfig.alertsChatColor.tooltip": "To find the HEX code of a color you can go online and search up your color name + hex code ",
+
+  "category.auto-totem": "Auto Totem",
+  "key.auto-totem.enableDisableMod": "Enable/Disable Auto Totem"
 }

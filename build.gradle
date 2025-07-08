@@ -82,27 +82,27 @@ publishing {
 	}
 }
 
-task buildAll {
-	group = "build"
-	description = "Build the mod for all available versions in the 'versions/' folder."
+def versionsDir = file("versions")
+def versionFiles = versionsDir.listFiles()?.findAll { it.name.endsWith(".properties") }
 
-	doLast {
-		file("versions").listFiles(new FilenameFilter() {
-			boolean accept(File dir, String name) {
-				return name.endsWith(".properties")
-			}
-		}).each { file ->
-			def versionName = file.name.replace(".properties", "")
-			println "Building for Minecraft version: ${versionName}"
+versionFiles.forEach { file ->
+    def versionName = file.name.replace(".properties","").replace(".", "_")
 
-			exec {
-				workingDir projectDir
-				commandLine "./gradlew", "build", "-Ptarget_mc=${versionName}"
-				// On Windows, use gradlew.bat and quotes
-				if (System.properties['os.name'].toLowerCase().contains("windows")) {
-					commandLine "cmd", "/c", "gradlew.bat", "build", "-Ptarget_mc=\"${versionName}\""
-				}
-			}
-		}
-	}
+    tasks.register("buildFor_${versionName}"){
+        group = "build"
+        description = "Build mod for Minecraft version ${versionName}"
+
+        doLast {
+            println("Building for Minecraft version: ${versionName}")
+            exec {
+                commandLine 'gradlew.bat', 'build', "-Ptarget_mc=${versionName.replace('_', '.')}"
+            }
+        }
+    }
+}
+
+tasks.register('buildAllVersions'){
+    group = "build"
+    description = "Build the mod for all versions in the 'versions' folder "
+    dependsOn versionFiles.collect { file -> "buildFor_${file.name.replace('.properties','').replace('.', '_')}" }
 }
