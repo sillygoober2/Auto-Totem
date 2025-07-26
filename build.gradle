@@ -1,9 +1,10 @@
 plugins {
 	id 'fabric-loom' version "1.10-SNAPSHOT"
 	id 'maven-publish'
+	id 'com.matthewprenger.cursegradle' version "1.4.0"
 }
 
-def mcVersion = project.hasProperty("target_mc") ? project.property("target_mc") : "1.21.5"
+def mcVersion = project.hasProperty("target_mc") ? project.property("target_mc") : "1.21.8"
 def versionProps = new Properties()
 file("versions/${mcVersion}.properties").withInputStream {
 	versionProps.load(it)
@@ -95,7 +96,7 @@ versionFiles.forEach { file ->
         doLast {
             println("Building for Minecraft version: ${versionName}")
             exec {
-                commandLine 'gradlew.bat', 'build', "-Ptarget_mc=${versionName.replace('_', '.')}"
+                commandLine './gradlew', 'build', "-Ptarget_mc=${versionName.replace('_', '.')}"
             }
         }
     }
