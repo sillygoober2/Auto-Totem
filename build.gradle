@@ -1,109 +1,84 @@
 plugins {
-	id 'fabric-loom' version "1.10-SNAPSHOT"
-	id 'maven-publish'
-	id 'com.matthewprenger.cursegradle' version "1.4.0"
+    id 'fabric-loom' version "${loom_version}"
+    id 'maven-publish'
 }
-
-def mcVersion = project.hasProperty("target_mc") ? project.property("target_mc") : "1.21.8"
-def versionProps = new Properties()
-file("versions/${mcVersion}.properties").withInputStream {
-	versionProps.load(it)
-}
-version = project.mod_version
-group = project.maven_group
 
 base {
-	archivesName = "${project.archives_base_name}-${versionProps.minecraft_version}"
+    archivesName = "${project.archives_base_name}-${stonecutter.current.version}-${mod_version}"
 }
 
 repositories {
-	maven {
-		url = "https://api.modrinth.com/maven"
-	}
-}
-
-loom {
-	splitEnvironmentSourceSets()
-
-	mods {
-		"auto-totem" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
-		}
-	}
-
-}
-
-dependencies {
-	minecraft "com.mojang:minecraft:${versionProps.minecraft_version}"
-	mappings "net.fabricmc:yarn:${versionProps.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${versionProps.loader_version}"
-
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${versionProps.fabric_version}"
-
-	modImplementation include ("maven.modrinth:midnightlib:${versionProps.midnightlib_version}")
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": inputs.properties.version
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
-}
-
-java {
-	withSourcesJar()
-
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
-}
-
-jar {
-	inputs.property "archivesName", project.base.archivesName
-
-	from("LICENSE") {
-		rename { "${it}_${inputs.properties.archivesName}"}
-	}
-}
-
-publishing {
-	publications {
-		create("mavenJava", MavenPublication) {
-			artifactId = project.archives_base_name
-			from components.java
-		}
-	}
-
-	repositories {
-	}
-}
-
-def versionsDir = file("versions")
-def versionFiles = versionsDir.listFiles()?.findAll { it.name.endsWith(".properties") }
-
-versionFiles.forEach { file ->
-    def versionName = file.name.replace(".properties","").replace(".", "_")
-
-    tasks.register("buildFor_${versionName}"){
-        group = "build"
-        description = "Build mod for Minecraft version ${versionName}"
-
-        doLast {
-            println("Building for Minecraft version: ${versionName}")
-            exec {
-                commandLine './gradlew', 'build', "-Ptarget_mc=${versionName.replace('_', '.')}"
-            }
-        }
+    maven {
+        url = "https://api.modrinth.com/maven"
     }
 }
 
-tasks.register('buildAllVersions'){
-    group = "build"
-    description = "Build the mod for all versions in the 'versions' folder "
-    dependsOn versionFiles.collect { file -> "buildFor_${file.name.replace('.properties','').replace('.', '_')}" }
+loom {
+    splitEnvironmentSourceSets()
+
+    mods {
+        "sillys-auto-totem" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+
+    runConfigs.all {
+        ideConfigGenerated true // Run configurations are not created for subprojects by default
+        runDir "../../run" // Use a shared run folder and create separate worlds
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${stonecutter.current.project}"
+    mappings "net.fabricmc:yarn:${property('deps.yarn_mappings')}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${property('deps.fabric_loader')}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${property('deps.fabric_api')}"
+
+    modImplementation include ("maven.modrinth:midnightlib:${property('midnightlib_version')}")
+}
+
+processResources {
+    inputs.property "minecraft", stonecutter.current.version
+
+    filesMatching("fabric.mod.json") {
+        expand "minecraft": stonecutter.current.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+}
+
+java {
+    withSourcesJar()
+
+    def java = stonecutter.eval(stonecutter.current.version, ">=1.20.5")
+            ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+    targetCompatibility = java
+    sourceCompatibility = java
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${inputs.properties.archivesName}"}
+    }
+}
+
+remapJar {
+    destinationDirectory.set(file("$rootDir/jars"))
+    inputs.property "archivesName", project.base.archivesName
+}
+
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+    }
 }

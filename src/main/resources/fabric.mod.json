@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "auto-totem",
-	"version": "${version}",
+	"version": "${minecraft}",
 	"name": "Auto Totem",
 	"description": "Auto Equip a totem after popping one! (OR Shield)",
 	"authors": [
