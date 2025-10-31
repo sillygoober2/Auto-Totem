@@ -14,7 +14,7 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 import java.util.Arrays;
 
@@ -23,6 +23,7 @@ public class AutoTotemClient implements ClientModInitializer {
 	private static ItemStack previousOffhand = ItemStack.EMPTY;
 	private int cooldownTicks = 0;
     public static KeyBinding enableModKeybind;
+	private static final KeyBinding.Category CATEGORY = KeyBinding.Category.create(Identifier.of("auto-totem", "general"));
 
 	@Override
 	public void onInitializeClient() {
@@ -33,7 +34,7 @@ public class AutoTotemClient implements ClientModInitializer {
                 "key.auto-totem.enableDisableMod",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_J,
-                "category.auto-totem"
+                CATEGORY
         ));
 	}
 
