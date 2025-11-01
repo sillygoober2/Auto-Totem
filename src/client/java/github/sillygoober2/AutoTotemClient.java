@@ -24,9 +24,10 @@ public class AutoTotemClient implements ClientModInitializer {
 	private static ItemStack previousOffhand = ItemStack.EMPTY;
 	private int cooldownTicks = 0;
     public static KeyBinding enableModKeybind;
-    //?if >=1.21.9 {
-    private static final KeyBinding.Category AUTOTOTEMCATEGORY = KeyBinding.Category.create(Identifier.of("sillysautototem"));
-    //?}
+
+    /*? if <1.21.9 {*/private static String MODCATEGORY = "category.sillysautototem";
+    /*?} else*//*public static final KeyBinding.Category MODCATEGORY = KeyBinding.Category.create(Identifier.of("sillysautototem"));*/
+
 	@Override
 	public void onInitializeClient() {
 		MidnightConfig.init("auto-totem", AutoTotemConfig.class);
@@ -36,11 +37,7 @@ public class AutoTotemClient implements ClientModInitializer {
                 "key.auto-totem.enableDisableMod",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_J,
-                //?if >=1.21.9 {
-                AUTOTOTEMCATEGORY
-                //?} else{
-                "category.auto-totem"
-                //?}
+                MODCATEGORY
         ));
 	}
 

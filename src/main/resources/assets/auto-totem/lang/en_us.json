@@ -16,6 +16,7 @@
   "auto-totem.midnightconfig.alertsChatColor": "Alerts colour in Chat (HEX code)",
   "auto-totem.midnightconfig.alertsChatColor.tooltip": "To find the HEX code of a color you can go online and search up your color name + hex code ",
 
-  "category.auto-totem": "Auto Totem",
+  "category.sillysautototem": "Silly's Auto Totem",
+  "key.category.minecraft.sillysautototem": "Silly's Auto Totem",
   "key.auto-totem.enableDisableMod": "Enable/Disable Auto Totem"
 }
