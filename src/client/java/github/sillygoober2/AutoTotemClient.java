@@ -45,10 +45,10 @@ public class AutoTotemClient implements ClientModInitializer {
 			totemRecentlyPopped = false;
 
 			if(AutoTotemConfig.modEnabled){
-				sendChatMessage(client,"Auto Totem was ENABLED","#42f551");
+				sendChatMessage(client,"Auto Totem is now ENABLED","#42f551");
 			}
 			else{
-				sendChatMessage(client,"Auto Totem was DISABLED","#f54242");
+				sendChatMessage(client,"Auto Totem is now DISABLED","#f54242");
 			}
 		}
 
@@ -118,11 +118,15 @@ public class AutoTotemClient implements ClientModInitializer {
 				client.player
 		);
 		String itemName = client.player.getOffHandStack().getItem().getName().getString();
-		sendChatMessage(
-				client,
-				itemName+" was automatically equipped after "+ AutoTotemConfig.equipCooldown+" seconds.",
-                null
-		);
+		String message;
+		if(AutoTotemConfig.equipCooldown == 0){
+			message = itemName+" was automatically equipped instantly.";
+		} else if(AutoTotemConfig.equipCooldown == 1){
+			message = itemName+" was automatically equipped after 1 second.";
+		} else {
+			message = itemName+" was automatically equipped after "+ AutoTotemConfig.equipCooldown+" seconds.";
+		}
+		sendChatMessage(client, message, null);
 	}
 
 	private boolean didTotemPop(MinecraftClient client) {
