@@ -1,6 +1,5 @@
-package github.sillygoober2;
+package silly.autototem;
 
-import com.mojang.serialization.DataResult;
 import eu.midnightdust.lib.config.MidnightConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -14,7 +13,6 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 import java.util.Arrays;
@@ -25,8 +23,7 @@ public class AutoTotemClient implements ClientModInitializer {
 	private int cooldownTicks = 0;
     public static KeyBinding enableModKeybind;
 
-    /*? if <1.21.9 {*/private static String MODCATEGORY = "category.sillysautototem";
-    /*?} else*//*public static final KeyBinding.Category MODCATEGORY = KeyBinding.Category.create(Identifier.of("sillysautototem"));*/
+    public static final KeyBinding.Category MODCATEGORY = KeyBinding.Category.create(Identifier.of("sillysautototem"));
 
 	@Override
 	public void onInitializeClient() {
@@ -67,7 +64,7 @@ public class AutoTotemClient implements ClientModInitializer {
 
 		if(!previousOffhand.isEmpty() && current.isEmpty() && didTotemPop(client) && !totemRecentlyPopped){
 			totemRecentlyPopped = true;
-			cooldownTicks = AutoTotemConfig.equipCooldown * 20;
+			cooldownTicks = Math.round(AutoTotemConfig.equipCooldown * 20);
 			return;
 		}
 
@@ -121,11 +118,13 @@ public class AutoTotemClient implements ClientModInitializer {
 				client.player
 		);
 		String itemName = client.player.getOffHandStack().getItem().getName().getString();
-		sendChatMessage(
-				client,
-				itemName+" was automatically equipped after "+ AutoTotemConfig.equipCooldown+" seconds.",
-                null
-		);
+		if(AutoTotemConfig.sendTotemUseAlerts){
+            sendChatMessage(
+                    client,
+                    itemName+" was automatically equipped after "+ AutoTotemConfig.equipCooldown+" seconds.",
+                    null
+            );
+        }
 	}
 
 	private boolean didTotemPop(MinecraftClient client) {
@@ -158,7 +157,9 @@ public class AutoTotemClient implements ClientModInitializer {
             client.inGameHud.getChatHud().addMessage(fullMessage);
         }
         else{
-			colorHex = AutoTotemConfig.alertsChatColor;
+            colorHex = (AutoTotemConfig.alertsChatColor != null && !AutoTotemConfig.alertsChatColor.toString().isEmpty())
+                    ? AutoTotemConfig.alertsChatColor.toString()
+                    : "FFFFFF";
 			int rgb = Integer.parseInt(colorHex.replace("#",""), 16);
 			TextColor color = TextColor.fromRgb(rgb);
 			client.inGameHud.getChatHud().addMessage(Text.literal(message).styled(style -> style.withColor(color)));

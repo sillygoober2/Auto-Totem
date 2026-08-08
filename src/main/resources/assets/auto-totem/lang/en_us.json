@@ -10,6 +10,7 @@
   "auto-totem.midnightconfig.equipCooldown": "Equip Cooldown (Seconds)",
   "auto-totem.midnightconfig.equipCooldown.label.tooltip": "Amount of seconds for Totem/Shield to be equipped after it pops",
 
+  "auto-totem.midnightconfig.sendTotemUseAlerts": "Send Alerts On Totem Equip in Chat",
   "auto-totem.midnightconfig.sendNoTotemAlerts": "Send Alerts On No Totems In Chat",
   "auto-totem.midnightconfig.sendNoShieldAlerts": "Send Alerts On No Shields In Chat",
 

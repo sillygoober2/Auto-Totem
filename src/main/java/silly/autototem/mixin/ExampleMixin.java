@@ -1,4 +1,4 @@
-package github.sillygoober2.mixin;
+package silly.autototem.mixin;
 
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

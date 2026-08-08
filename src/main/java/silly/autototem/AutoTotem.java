@@ -1,4 +1,4 @@
-package github.sillygoober2;
+package silly.autototem;
 
 import net.fabricmc.api.ModInitializer;
 

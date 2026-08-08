@@ -1,4 +1,4 @@
-package github.sillygoober2;
+package silly.autototem;
 
 import eu.midnightdust.lib.config.MidnightConfig;
 
@@ -7,8 +7,9 @@ public class AutoTotemConfig extends MidnightConfig {
 
     @Entry(category = MAIN) public static boolean modEnabled = true;
     @Entry(category = MAIN) public static boolean switchToShield = true;
-    @Entry(category = MAIN, min=0,max=120) public static int equipCooldown = 1;
+    @Entry(category = MAIN, min=0,max=120) public static float equipCooldown = 1;
     @Comment(category = MAIN) public static Comment spacer1;
+    @Entry(category = MAIN) public static boolean sendTotemUseAlerts = false;
     @Entry(category = MAIN) public static boolean sendNoTotemAlerts = false;
     @Entry(category = MAIN) public static boolean sendNoShieldAlerts = false;
     @Comment(category = MAIN) public static Comment spacer2;

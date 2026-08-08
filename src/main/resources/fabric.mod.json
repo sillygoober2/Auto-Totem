@@ -1,33 +1,33 @@
-{
-	"schemaVersion": 1,
-	"id": "auto-totem",
-	"version": "${minecraft}",
-	"name": "Auto Totem",
-	"description": "Auto Equip a totem after popping one! (OR Shield)",
-	"authors": [
-		"sillyygoober"
-	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/sillygoober2/Auto-Totem"
-	},
-	"license": "CC0-1.0",
-	"icon": "icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"client": [
-			"github.sillygoober2.AutoTotemClient"
-		]
-	},
-	"mixins": [
-	],
-	"depends": {
-		"fabricloader": ">=0.16.14",
-		"minecraft": ">=1.20",
-		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
-	}
-}
+  {
+      "schemaVersion": 1,
+      "id": "auto-totem",
+      "version": "${version}",
+      "name": "Auto Totem",
+      "description": "Auto Equip a totem after popping one! (OR Shield)",
+      "authors": [
+          "sillyygoober"
+      ],
+      "contact": {
+          "homepage": "https://fabricmc.net/",
+          "sources": "https://github.com/sillygoober2/Auto-Totem"
+      },
+      "license": "CC0-1.0",
+      "icon": "icon.png",
+      "environment": "*",
+      "entrypoints": {
+          "client": [
+              "github.sillygoober2.AutoTotemClient"
+          ]
+      },
+      "mixins": [
+      ],
+      "depends": {
+          "fabricloader": ">=${loader_version}",
+          "minecraft": "~${minecraft_version}",
+          "java": ">=21",
+          "fabric-api": "*"
+      },
+      "suggests": {
+          "another-mod": "*"
+      }
+  }
